@@ -17,9 +17,18 @@ def make_dataset(y2, y5, y10, y30, div_):
     constraints = dict(zip([2, 5, 10, 30], [y2, y5, y10, y30]))
     NS = NelsonSiegel()
     NS.calibrate(constraints)
-    df = pd.DataFrame({'maturities': maturities, 'ytm': NS.ytm(maturities)}).set_index('maturities')
+    df = pd.DataFrame(
+        {
+            'maturities': maturities,
+            'ytm': NS.ytm(maturities)
+        }).set_index('maturities')
 
-    params_text = '<b>Parameters:</b><br><ul><li>beta_0 = {:.4f}</li>, <li>beta_1 = {:.4f}</li>, <li>beta_2 = {:.4f}</li>, <li>tau = {:.4f}</li></ul>'.format(NS.b0, NS.b1, NS.b2, NS.tau)
+    params_text = '<b>Parameters:</b><br><ul\
+    ><li>beta_0 = {:.4f}</li>\
+    <li>beta_1 = {:.4f}</li>\
+    <li>beta_2 = {:.4f}</li>\
+    <li>tau = {:.4f}</li>\
+    </ul>'.format(NS.b0, NS.b1, NS.b2, NS.tau)
     div_.text = params_text
 
     df_cstr = pd.DataFrame(columns=['maturities', 'ytm'])
@@ -45,23 +54,19 @@ def make_plot(src, cstr):
     # original function
     fig.line('maturities',
              'ytm',
-             source = src,
-             color = 'color',
-             legend = 'Yield Curve model',
-             line_color = 'blue',
+             source=src,
+             color='color',
+             legend='Yield Curve model',
+             line_color='blue',
              )
 
-    # y2 = yield_2_select.value
-    # y5 = yield_5_select.value
-    # y10 = yield_10_select.value
-    # y30 = yield_30_select.value
-    #
-    # fig.circle(2, y2, size=5, color='red', legend='2y yield')
-    # fig.circle(5, y5, size=5, color='red', legend='5y yield')
-    # fig.circle(10, y10, size=5, color='red', legend='10y yield')
-    # fig.circle(30, y30, size=5, color='red', legend='30y yield')
-
-    fig.circle('maturities', 'ytm', source=cstr, size=5, color='red', legend='Target yields')
+    fig.circle('maturities',
+               'ytm',
+               source=cstr,
+               size=5,
+               color='red',
+               legend='Target yields'
+               )
 
     fig.legend.click_policy = 'hide'
     fig.legend.location = 'bottom_right'
@@ -142,9 +147,9 @@ controls = WidgetBox(yield_2_select,
 layout = row(controls, fig)
 
 # Make a tab with the layout
-
 tab = Panel(child=layout, title='Nelson-Siegel')
-### ALL TABS TOGETHER
+
+# ALL TABS TOGETHER
 tabs = Tabs(tabs=[tab])
 
 curdoc().add_root(tabs)
